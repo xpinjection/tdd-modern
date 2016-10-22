@@ -12,9 +12,9 @@ package com.xpinjection.service;
 import com.xpinjection.dao.BookDao;
 import com.xpinjection.domain.Book;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Validate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import java.util.Arrays;
 import java.util.List;
@@ -50,7 +50,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<Book> findBooksByAuthor(String author) {
-        Validate.notBlank(author, "Author is empty!");
+        Assert.hasText(author, "Author is empty!");
         String correctAuthor = splitFirstAndLastName(author);
         return cache.computeIfAbsent(correctAuthor, bookDao::findByAuthor);
     }

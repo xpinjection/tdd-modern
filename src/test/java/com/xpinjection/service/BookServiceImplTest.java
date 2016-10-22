@@ -74,7 +74,7 @@ public class BookServiceImplTest {
         bookService.findBooksByAuthor(" \t \n ");
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void ifAuthorIsNullThrowException() {
         bookService.findBooksByAuthor(null);
     }
