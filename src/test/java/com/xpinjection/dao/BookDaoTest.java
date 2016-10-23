@@ -9,13 +9,18 @@
 // ============================================================================
 package com.xpinjection.dao;
 
+import com.github.database.rider.core.DBUnitRule;
+import com.github.database.rider.core.api.dataset.DataSet;
+import com.github.database.rider.core.api.dataset.ExpectedDataSet;
 import com.xpinjection.domain.Book;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -33,6 +38,9 @@ public class BookDaoTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Rule
+    public DBUnitRule dbUnitRule = DBUnitRule.instance(() -> jdbcTemplate.getDataSource().getConnection());
 
     @Autowired
     private TestEntityManager em;
@@ -64,6 +72,25 @@ public class BookDaoTest {
         second.setId(2L);
         assertThat(dao.findByAuthor("author"),
                 hasItems(samePropertyValuesAs(first), samePropertyValuesAs(second)));
+    }
+
+    @Test
+    @ExpectedDataSet("expected-books.xml")
+    @Commit
+    public void booksMayBeStored() {
+        dao.save(new Book("The First", "Mikalai Alimenkou"));
+    }
+
+    @Test
+    @DataSet("stored-books.xml")
+    public void ifBookAlreadyExistsItMayBeFoundUsingSeveralMethods() {
+        Book book = new Book("Existing book", "Unknown");
+        book.setId(13L);
+        assertThat(dao.findAll(), hasItem(samePropertyValuesAs(book)));
+        assertThat(dao.findOne(13L), samePropertyValuesAs(book));
+        assertThat(dao.getOne(13L), samePropertyValuesAs(book));
+        assertThat(dao.exists(13L), is(true));
+        assertThat(dao.findByAuthor("Unknown"), hasItem(samePropertyValuesAs(book)));
     }
 
     private long addBookToDatabase(String title, String author) {
