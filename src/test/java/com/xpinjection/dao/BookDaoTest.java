@@ -9,20 +9,13 @@
 // ============================================================================
 package com.xpinjection.dao;
 
-import com.github.database.rider.core.DBUnitRule;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.core.api.dataset.ExpectedDataSet;
+import com.google.common.collect.ImmutableMap;
 import com.xpinjection.domain.Book;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
@@ -31,23 +24,7 @@ import static org.junit.Assert.assertThat;
  * @author Alimenkou Mikalai
  * @version 1.0
  */
-@RunWith(SpringRunner.class)
-@DataJpaTest
-public class BookDaoTest {
-    private static long ID = 1;
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-    @Rule
-    public DBUnitRule dbUnitRule = DBUnitRule.instance(() -> jdbcTemplate.getDataSource().getConnection());
-
-    @Autowired
-    private TestEntityManager em;
-
-    @Autowired
-    private BookDao dao;
-
+public class BookDaoTest extends AbstractDaoTest<BookDao> {
     @Test
     public void ifThereIsNoBookWithSuchAuthorEmptyListIsReturned() {
         assertThat(dao.findByAuthor("unknown"), is(empty()));
@@ -70,11 +47,11 @@ public class BookDaoTest {
         first.setId(1L);
         Book second = new Book("Second book", "author");
         second.setId(2L);
-        assertThat(dao.findByAuthor("author"),
-                hasItems(samePropertyValuesAs(first), samePropertyValuesAs(second)));
+        assertThat(dao.findByAuthor("author"), hasItems(samePropertyValuesAs(first), samePropertyValuesAs(second)));
     }
 
     @Test
+    @DataSet("empty.xml")
     @ExpectedDataSet("expected-books.xml")
     @Commit
     public void booksMayBeStored() {
@@ -94,8 +71,6 @@ public class BookDaoTest {
     }
 
     private long addBookToDatabase(String title, String author) {
-        long id = ID++;
-        jdbcTemplate.update("INSERT INTO book (id, name, author) VALUES (?, ?, ?)", id, title, author);
-        return id;
+        return addRecordToDatabase("book", ImmutableMap.of("name", title, "author", author));
     }
 }
