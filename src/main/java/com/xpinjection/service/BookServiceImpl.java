@@ -16,15 +16,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
-import static org.apache.commons.lang3.StringUtils.splitByCharacterTypeCamelCase;
 
 /**
  * @author Alimenkou Mikalai
@@ -51,18 +48,31 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<Book> findBooksByAuthor(String author) {
         Assert.hasText(author, "Author is empty!");
-        String correctAuthor = splitFirstAndLastName(author);
-        return cache.computeIfAbsent(correctAuthor, bookDao::findByAuthor);
+        String normalizedAuthor = normalizeAuthorName(author);
+        return cache.computeIfAbsent(normalizedAuthor, bookDao::findByAuthor);
+    }
+
+    private String normalizeAuthorName(String author) {
+        String authorName = StringUtils.normalizeSpace(author);
+        return isSingleWord(authorName) ? splitOnFirstAndLastNames(authorName) : authorName;
+    }
+
+    private boolean isSingleWord(String correctAuthor) {
+        return !StringUtils.containsWhitespace(correctAuthor);
+    }
+
+    private String splitOnFirstAndLastNames(String author) {
+        String[] parts = StringUtils.splitByCharacterTypeCamelCase(author);
+        String firstName = parts[0];
+        if (parts.length == 1) {
+            return firstName;
+        }
+        String lastName = StringUtils.substringAfter(author, firstName);
+        return String.join(" ", firstName, lastName);
     }
 
     @Override
     public List<Book> findAllBooks() {
         return bookDao.findAll();
-    }
-
-    private String splitFirstAndLastName(String author) {
-        return Arrays.stream(splitByCharacterTypeCamelCase(author))
-                .filter(StringUtils::isNotBlank)
-                .collect(joining(" "));
     }
 }

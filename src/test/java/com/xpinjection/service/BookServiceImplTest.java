@@ -100,6 +100,22 @@ public class BookServiceImplTest {
     }
 
     @Test
+    public void punctuationShouldBeIgnored() {
+        Book book = new Book("The book", "Who cares");
+        when(dao.findByAuthor("Who cares?")).thenReturn(asList(book));
+
+        assertBooksByAuthor("Who cares?", book);
+    }
+
+    @Test
+    public void compositeLastNameIsNotSplit() {
+        Book book = new Book("The book", "Alfred McGregor");
+        when(dao.findByAuthor("Alfred McGregor")).thenReturn(asList(book));
+
+        assertBooksByAuthor("Alfred McGregor", book);
+    }
+
+    @Test
     public void authorNameShouldBeTrimmedBeforeUsage() {
         Book book = new Book("The book", "Mikalai Alimenkou");
         when(dao.findByAuthor("Mikalai Alimenkou")).thenReturn(asList(book));
