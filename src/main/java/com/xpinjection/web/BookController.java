@@ -1,12 +1,3 @@
-// ============================================================================
-//  File          : BookController
-//  Created       : 19.10.2016   
-//  Description   :
-//  Modifications :
-//
-// ============================================================================
-//  Copyright(c) 2016 XP Injection, Ukraine
-// ============================================================================
 package com.xpinjection.web;
 
 import com.xpinjection.service.BookService;
@@ -17,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * @author Alimenkou Mikalai
- * @version 1.0
  */
 @Controller
 public class BookController {

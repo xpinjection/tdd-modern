@@ -1,12 +1,3 @@
-// ============================================================================
-//  File          : BookControllerIntegrationTest
-//  Created       : 20.10.2016   
-//  Description   :
-//  Modifications :
-//
-// ============================================================================
-//  Copyright(c) 2016 XP Injection, Ukraine
-// ============================================================================
 package com.xpinjection.web;
 
 import com.gargoylesoftware.htmlunit.WebClient;
@@ -39,7 +30,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 /**
  * @author Alimenkou Mikalai
- * @version 1.0
  */
 @RunWith(SpringRunner.class)
 @WebMvcTest(BookController.class)

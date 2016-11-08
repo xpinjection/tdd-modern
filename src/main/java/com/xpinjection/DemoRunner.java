@@ -1,12 +1,3 @@
-// ============================================================================
-//  File          : DemoRunner
-//  Created       : 18.10.2016   
-//  Description   :
-//  Modifications :
-//
-// ============================================================================
-//  Copyright(c) 2016 XP Injection, Ukraine
-// ============================================================================
 package com.xpinjection;
 
 import com.xpinjection.service.BookService;
@@ -18,7 +9,6 @@ import java.util.Map;
 
 /**
  * @author Alimenkou Mikalai
- * @version 1.0
  */
 @Component
 public class DemoRunner implements CommandLineRunner {

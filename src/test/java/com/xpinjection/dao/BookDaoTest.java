@@ -1,12 +1,3 @@
-// ============================================================================
-//  File          : BookDaoTest
-//  Created       : 18.10.2016   
-//  Description   :
-//  Modifications :
-//
-// ============================================================================
-//  Copyright(c) 2016 XP Injection, Ukraine
-// ============================================================================
 package com.xpinjection.dao;
 
 import com.github.database.rider.core.api.dataset.DataSet;
@@ -22,7 +13,6 @@ import static org.junit.Assert.assertThat;
 
 /**
  * @author Alimenkou Mikalai
- * @version 1.0
  */
 public class BookDaoTest extends AbstractDaoTest<BookDao> {
     @Test
