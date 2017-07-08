@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static java.util.Collections.emptyList;
-import static org.codehaus.groovy.runtime.InvokerHelper.asList;
+import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.notNull;
@@ -72,7 +72,7 @@ public class BookServiceImplTest {
     @Test
     public void booksByAuthorShouldBeCached() {
         Book book = new Book("The book", "author");
-        when(dao.findByAuthor("a")).thenReturn(asList(book));
+        when(dao.findByAuthor("a")).thenReturn(singletonList(book));
         when(dao.findByAuthor("a a")).thenReturn(emptyList());
 
         assertBooksByAuthor("a", book);
@@ -84,7 +84,7 @@ public class BookServiceImplTest {
     @Test
     public void ifCamelCaseDetectedThenSplitInvalidAuthorNameOnFirstAndLastName() {
         Book book = new Book("The book", "Mikalai Alimenkou");
-        when(dao.findByAuthor("Mikalai Alimenkou")).thenReturn(asList(book));
+        when(dao.findByAuthor("Mikalai Alimenkou")).thenReturn(singletonList(book));
 
         assertBooksByAuthor("MikalaiAlimenkou", book);
     }
@@ -92,7 +92,7 @@ public class BookServiceImplTest {
     @Test
     public void punctuationShouldBeIgnored() {
         Book book = new Book("The book", "Who cares");
-        when(dao.findByAuthor("Who cares?")).thenReturn(asList(book));
+        when(dao.findByAuthor("Who cares?")).thenReturn(singletonList(book));
 
         assertBooksByAuthor("Who cares?", book);
     }
@@ -100,7 +100,7 @@ public class BookServiceImplTest {
     @Test
     public void compositeLastNameIsNotSplit() {
         Book book = new Book("The book", "Alfred McGregor");
-        when(dao.findByAuthor("Alfred McGregor")).thenReturn(asList(book));
+        when(dao.findByAuthor("Alfred McGregor")).thenReturn(singletonList(book));
 
         assertBooksByAuthor("Alfred McGregor", book);
     }
@@ -108,7 +108,7 @@ public class BookServiceImplTest {
     @Test
     public void authorNameShouldBeTrimmedBeforeUsage() {
         Book book = new Book("The book", "Mikalai Alimenkou");
-        when(dao.findByAuthor("Mikalai Alimenkou")).thenReturn(asList(book));
+        when(dao.findByAuthor("Mikalai Alimenkou")).thenReturn(singletonList(book));
 
         assertBooksByAuthor(" \t Mikalai \n Alimenkou \t ", book);
     }
