@@ -21,11 +21,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author Alimenkou Mikalai
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class BookControllerSystemTest {
-    @Autowired
-    private BookController controller;
-
     @Autowired
     private WebApplicationContext context;
 
