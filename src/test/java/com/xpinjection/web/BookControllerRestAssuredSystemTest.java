@@ -2,6 +2,7 @@ package com.xpinjection.web;
 
 import com.github.database.rider.core.DBUnitRule;
 import com.github.database.rider.core.api.dataset.DataSet;
+import com.github.database.rider.core.api.dataset.SeedStrategy;
 import org.apache.http.HttpStatus;
 import org.junit.Rule;
 import org.junit.Test;
@@ -25,10 +26,11 @@ public class BookControllerRestAssuredSystemTest {
     private WebApplicationContext context;
 
     @Rule
-    public DBUnitRule dbUnitRule = DBUnitRule.instance(() -> context.getBean(DataSource.class).getConnection());
+    public DBUnitRule dbUnitRule = DBUnitRule.instance("system",
+            () -> context.getBean(DataSource.class).getConnection());
 
     @Test
-    @DataSet("default-books.xml")
+    @DataSet(executorId = "system", value = "default-books.xml", strategy = SeedStrategy.INSERT)
     public void allBooksFromDatabaseAreAvailableOnWeb() throws Exception {
         given()
             .accept("text/html;charset=UTF-8")
@@ -38,7 +40,7 @@ public class BookControllerRestAssuredSystemTest {
             .statusCode(HttpStatus.SC_OK)
             .contentType("text/html;charset=UTF-8")
             .content(allOf(
-                containsString("Spring in Action, <em>Craig Walls</em>"),
-                containsString("Hibernate in Action, <em>Christian Bauer</em>")));
+                containsString("Spring in Action 2, <em>Craig Walls</em>"),
+                containsString("Hibernate in Action 2, <em>Christian Bauer</em>")));
     }
 }
